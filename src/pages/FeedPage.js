@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { db } from '../firebaseConfig';
 import { collection, getDocs } from 'firebase/firestore';
-import Navbar from '../components/Navbar';
+import { Container, Card } from 'react-bootstrap';
+import Navbar from '../components/Navbar';  // Zorg ervoor dat de Navbar wordt geïmporteerd
 
 function FeedPage() {
   const [posts, setPosts] = useState([]);
@@ -18,16 +19,27 @@ function FeedPage() {
 
   return (
     <div>
+      <Container className="mt-5">
+        <h2>Feed</h2>
+        <div className="post-list">
+          {posts.length > 0 ? (
+            posts.map((post, index) => (
+              <Card key={index} className="mb-3">
+                <Card.Body>
+                  <Card.Title>{post.dishName}</Card.Title>
+                  <Card.Text>{post.description}</Card.Text>
+                  <Card.Footer>Posted by: {post.userEmail}</Card.Footer>
+                </Card.Body>
+              </Card>
+            ))
+          ) : (
+            <p>No posts available yet.</p>
+          )}
+        </div>
+      </Container>
+
+      {/* Voeg de Navbar onderaan toe */}
       <Navbar />
-      <h2>Feed</h2>
-      <div>
-        {posts.map((post, index) => (
-          <div key={index}>
-            <h3>{post.dishName}</h3>
-            <p>Posted by: {post.userId}</p>
-          </div>
-        ))}
-      </div>
     </div>
   );
 }

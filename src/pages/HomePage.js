@@ -1,27 +1,31 @@
-import React from 'react';
-import Navbar from '../components/Navbar';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from 'react-bootstrap';  // Bootstrap-knop
-import './HomePage.css';
+import { auth } from '../firebaseConfig';
+import { Container } from 'react-bootstrap';
 
 function HomePage() {
   const navigate = useNavigate();
 
-  const handleGetStarted = () => {
-    navigate('/login');
-  };
+  useEffect(() => {
+    const redirectAfterOpening = () => {
+      auth.onAuthStateChanged(user => {
+        if (user) {
+          navigate('/feed');  // Stuur ingelogde gebruikers naar de feed
+        } else {
+          navigate('/login');  // Stuur niet-ingelogde gebruikers naar de loginpagina
+        }
+      });
+    };
+
+    // Redirection na 3 seconden
+    setTimeout(redirectAfterOpening, 3000);
+  }, [navigate]);
 
   return (
-    <div className="home-page">
-      <Navbar />
-      <header className="home-header">
-        <h1>Welcome to the Food App</h1>
-        <p>Share your favorite dishes and get inspired by others!</p>
-        <Button variant="primary" size="lg" onClick={handleGetStarted}>
-          Let's Get Started
-        </Button>
-      </header>
-    </div>
+    <Container className="mt-5 text-center">
+      <h1>Welcome to the Food App</h1>
+      <p>Discover and share your favorite dishes!</p>
+    </Container>
   );
 }
 

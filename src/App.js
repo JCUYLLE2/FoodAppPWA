@@ -5,7 +5,9 @@ import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import ProfilePage from './pages/ProfilePage';
-import LogoutPage from './pages/LogoutPage';  // Voeg deze regel toe
+import FeedPage from './pages/FeedPage';
+import PostPage from './pages/PostPage';  // Voeg de PostPage toe
+import LogoutPage from './pages/LogoutPage';
 
 function App() {
   return (
@@ -15,7 +17,9 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/logout" element={<LogoutPage />} />  {/* Voeg deze regel toe */}
+        <Route path="/feed" element={<FeedPage />} />
+        <Route path="/post" element={<PostPage />} />  {/* Route voor de PostPage */}
+        <Route path="/logout" element={<LogoutPage />} />
       </Routes>
     </Router>
   );

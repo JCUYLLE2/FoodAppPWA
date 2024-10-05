@@ -15,9 +15,9 @@ function LoginPage() {
     setError('');
 
     try {
-      // Probeer in te loggen met het handmatig toegevoegde e-mailadres en wachtwoord
+      // Probeer in te loggen met Firebase Authentication
       await signInWithEmailAndPassword(auth, email, password);
-      navigate('/profile');  // Navigeer naar de profielpagina na succesvol inloggen
+      navigate('/feed');  // Navigeer naar de FeedPage na succesvol inloggen
     } catch (error) {
       switch (error.code) {
         case 'auth/wrong-password':
