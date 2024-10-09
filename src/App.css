@@ -1,38 +1,197 @@
-.App {
+/* Algemene stijlen voor de hele app */
+body,
+html {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+/* Zorg voor een responsieve container */
+.container {
+  margin-top: 90px;
+  padding: 20px;
+  width: 100%;
+  max-width: 1600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Algemene titels */
+h2 {
   text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 20px;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* Post-lijst stijlen */
+.post-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* Post-kaarten */
+.post-card {
+  width: 100%;
+  max-width: 1000px;
+  margin-bottom: 20px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.post-image {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Profiel- en gebruikersinformatie */
+.profile-pic {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+}
+
+/* Stijlen voor de HomePage */
+.home-page {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  height: 100vh;
+  background-color: #f4f4f4;
+}
+
+.home-logo {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  margin-bottom: 20px;
+}
+
+/* Responsive topbar styling */
+.topbar-logo {
+  max-width: 150px;
+  height: auto;
+}
+
+.topbar-profile-pic {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+/* Knoppen voor de startpagina */
+.start-button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #ff6347;
   color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
 }
 
-.App-link {
-  color: #61dafb;
+.start-button:hover {
+  background-color: #ff4500;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+/* Media query voor middelgrote schermen */
+@media (max-width: 1200px) {
+  .container {
+    max-width: 1000px;
   }
-  to {
-    transform: rotate(360deg);
+
+  .home-logo {
+    max-width: 350px;
+  }
+
+  .topbar-logo {
+    max-width: 120px;
+  }
+
+  .topbar-profile-pic {
+    width: 45px;
+    height: 45px;
+  }
+}
+
+/* Media query voor tablets */
+@media (max-width: 768px) {
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  .post-card {
+    max-width: 90%;
+  }
+
+  .profile-pic {
+    width: 60px;
+    height: 60px;
+  }
+
+  .home-header h1 {
+    font-size: 2rem;
+  }
+
+  .home-header p {
+    font-size: 1rem;
+  }
+
+  .home-logo {
+    max-width: 250px;
+  }
+
+  .topbar-logo {
+    max-width: 100px;
+  }
+
+  .topbar-profile-pic {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* Media query voor mobiele apparaten */
+@media (max-width: 480px) {
+  h2 {
+    font-size: 1.2rem;
+  }
+
+  .post-card {
+    max-width: 100%;
+  }
+
+  .profile-pic {
+    width: 50px;
+    height: 50px;
+  }
+
+  .home-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .home-header p {
+    font-size: 0.9rem;
+  }
+
+  .home-logo {
+    max-width: 200px;
+  }
+
+  .topbar-logo {
+    max-width: 80px;
+  }
+
+  .topbar-profile-pic {
+    width: 35px;
+    height: 35px;
   }
 }

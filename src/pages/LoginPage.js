@@ -36,15 +36,15 @@ function LoginPage() {
   };
 
   return (
-    <Container className="mt-5">
-      <h2>Login</h2>
+    <Container className="mt-5 login-container">
+      <h2 className="text-center">Login</h2>
       {error && <Alert variant="danger">{error}</Alert>}
-      <Form onSubmit={handleLogin}>
+      <Form onSubmit={handleLogin} className="login-form">
         <Form.Group controlId="formBasicEmail">
-          <Form.Label>Email address</Form.Label>
+          <Form.Label>Emailadres</Form.Label>
           <Form.Control
             type="email"
-            placeholder="Enter email"
+            placeholder="Voer je email in"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -52,18 +52,18 @@ function LoginPage() {
         </Form.Group>
 
         <Form.Group controlId="formBasicPassword" className="mt-3">
-          <Form.Label>Password</Form.Label>
+          <Form.Label>Wachtwoord</Form.Label>
           <Form.Control
             type="password"
-            placeholder="Password"
+            placeholder="Wachtwoord"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
         </Form.Group>
 
-        <Button variant="primary" type="submit" className="mt-4">
-          Log In
+        <Button variant="primary" type="submit" className="mt-4 w-100">
+          Log in
         </Button>
       </Form>
     </Container>

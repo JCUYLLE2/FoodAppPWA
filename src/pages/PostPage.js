@@ -8,12 +8,12 @@ import { Form, Button, Container, Alert } from 'react-bootstrap';
 function PostPage() {
   const [dishName, setDishName] = useState('');
   const [description, setDescription] = useState('');
-  const [recipeLink, setRecipeLink] = useState(''); // Nieuw veld voor receptlink
-  const [photo, setPhoto] = useState(null); // Nieuw veld voor foto
+  const [recipeLink, setRecipeLink] = useState(''); // Veld voor receptlink
+  const [photo, setPhoto] = useState(null); // Veld voor foto upload
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const navigate = useNavigate();
-  const storage = getStorage(); // Firebase Storage reference
+  const storage = getStorage(); // Firebase Storage referentie
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,21 +33,21 @@ function PostPage() {
       if (photo) {
         const storageRef = ref(storage, `dishPhotos/${user.uid}/${photo.name}`);
         const snapshot = await uploadBytes(storageRef, photo);
-        photoURL = await getDownloadURL(snapshot.ref); // Krijg de downloadbare URL van de afbeelding
+        photoURL = await getDownloadURL(snapshot.ref); // Verkrijg de URL van de geüploade afbeelding
       }
 
       // Voeg een nieuwe post toe aan Firestore
       await addDoc(collection(db, 'posts'), {
         dishName,
         description,
-        recipeLink, // Sla de link naar het recept op
-        photoURL, // Sla de URL van de geüploade afbeelding op
+        recipeLink, // Sla de receptlink op
+        photoURL, // Sla de URL van de afbeelding op
         userEmail: user.email,  // Sla het e-mailadres van de gebruiker op
         createdAt: new Date(),
       });
       setSuccess('Post created successfully!');
       setTimeout(() => {
-        navigate('/feed');  // Na succesvolle post terug naar de feed
+        navigate('/feed');  // Terug naar de feed na succesvolle post
       }, 2000);
     } catch (error) {
       setError('Failed to create post. Please try again.');
@@ -83,7 +83,7 @@ function PostPage() {
           />
         </Form.Group>
 
-        {/* Veld voor het uploaden van een foto */}
+        {/* Foto upload veld */}
         <Form.Group controlId="formPhoto" className="mt-3">
           <Form.Label>Upload Photo</Form.Label>
           <Form.Control
@@ -93,7 +93,7 @@ function PostPage() {
           />
         </Form.Group>
 
-        {/* Veld voor de link naar het recept */}
+        {/* Recept link veld */}
         <Form.Group controlId="formRecipeLink" className="mt-3">
           <Form.Label>Recipe Link</Form.Label>
           <Form.Control

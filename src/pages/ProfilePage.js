@@ -84,7 +84,7 @@ function ProfilePage() {
   return (
     <>
       <Navbar /> {/* Voeg de Navbar toe aan de pagina */}
-      <Container className="mt-5">
+      <Container className="mt-5 profile-container">
         <h2>Profile</h2>
         {error && <Alert variant="danger">{error}</Alert>}
         {success && <Alert variant="success">{success}</Alert>}
@@ -129,7 +129,7 @@ function ProfilePage() {
                 <img
                   src={profilePic}
                   alt="Profile"
-                  style={{ width: '150px', height: '150px', borderRadius: '50%' }}
+                  className="profile-pic"
                 />
               ) : (
                 <FaUserCircle size={150} />
