@@ -12,6 +12,12 @@ function FeedPage() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
+        // Controleer of de db correct is geïnitialiseerd
+        if (!db) {
+          setError('Database not initialized');
+          return;
+        }
+
         console.log('Fetching posts...'); // Log toegevoegd
         const querySnapshot = await getDocs(collection(db, 'posts'));
         const postsData = querySnapshot.docs.map(doc => doc.data());
