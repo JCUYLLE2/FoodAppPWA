@@ -4,6 +4,7 @@ import { Image } from 'react-bootstrap';
 import { auth, db } from '../firebaseConfig';
 import { doc, getDoc } from 'firebase/firestore';
 import './Topbar.css'; // Zorg voor de juiste CSS
+import logo from '../assets/logo.png'; // Importeer het logo
 
 function TopBar() {
   const [userName, setUserName] = useState('');
@@ -15,15 +16,11 @@ function TopBar() {
       const user = auth.currentUser;
       if (user) {
         try {
-          console.log('Fetching user data for user:', user.uid);  // Log voor user ID
           const userDoc = await getDoc(doc(db, 'users', user.uid));
           if (userDoc.exists()) {
             const data = userDoc.data();
             setUserName(data.gebruikersnaam || user.email);
-            setProfilePic(data.profilePic || '');  // Controleer of profilePic wordt opgehaald
-            console.log('ProfilePic URL:', data.profilePic);  // Log de profielfoto URL
-          } else {
-            console.log('No user document found for user:', user.uid);
+            setProfilePic(data.profilePic || '');
           }
         } catch (error) {
           console.error('Error fetching user data:', error);
@@ -37,11 +34,9 @@ function TopBar() {
   return (
     <div className="top-bar">
       <div className="logo" onClick={() => navigate('/')}>
-        {/* Voeg hier je logo toe */}
-        <img src="/path/to/logo.png" alt="Logo" className="logo-img" />
+        <img src={logo} alt="App Logo" className="logo-img" /> {/* Toon je logo */}
       </div>
       <div className="user-info">
-        {/* Fallback naar default profielfoto als de URL leeg is */}
         {profilePic ? (
           <Image src={profilePic} roundedCircle className="profile-pic" />
         ) : (

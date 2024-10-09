@@ -28,7 +28,7 @@ function FeedPage() {
   return (
     <>
       <Navbar />  {/* Voeg de Navbar toe */}
-      <Container className="mt-5" style={{ marginBottom: '80px' }}>  {/* Voeg marge onderaan toe */}
+      <Container className="mt-5" style={{ marginTop: '200px' }}>  {/* Voeg marge bovenaan toe */}
         <h2>Feed</h2>
         {error && <p>{error}</p>}
         <div className="post-list">
