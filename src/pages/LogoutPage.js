@@ -15,7 +15,7 @@ function LogoutPage() {
         setMessage('You have been logged out successfully.');
         // Na enkele seconden terugsturen naar de loginpagina
         setTimeout(() => {
-          navigate('/login');
+          navigate('/');
         }, 3000);  // 3 seconden wachttijd
       } catch (error) {
         setMessage('Failed to log out. Please try again.');
