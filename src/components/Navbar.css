@@ -1,17 +1,16 @@
-/* Maak de Navbar altijd zichtbaar onderaan de pagina */
 .navbar-bottom {
     position: fixed;
     bottom: 0;
     width: 100%;
-    background-color: #f8f9fa;
-    padding: 10px 0;
+    background-color: #343a40;
+    /* Donkere achtergrondkleur */
+    padding: 15px;
     display: flex;
     justify-content: space-around;
-    align-items: center;
-    border-top: 1px solid #ddd;
+    box-shadow: 0 -1px 10px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
 }
 
-/* Stijl voor de links in de Navbar */
 .navbar-links {
     list-style: none;
     display: flex;
@@ -22,30 +21,27 @@
 }
 
 .navbar-links li {
+    display: inline;
     margin: 0 10px;
+    /* Voeg ruimte tussen de knoppen toe */
 }
 
-.navbar-links a {
-    text-decoration: none;
-    font-size: 16px;
-    color: #007bff;
-}
-
-.navbar-links a:hover {
-    text-decoration: underline;
-}
-
-/* Grote knop voor het maken van een post */
-.create-post-button {
+.navbar-button {
     font-size: 18px;
+    font-weight: bold;
     padding: 10px 20px;
+    border-radius: 30px;
+}
+
+.create-post-button {
     background-color: #28a745;
+    /* Felgroene kleur voor de Create Post knop */
+    border-color: #28a745;
     color: white;
-    border: none;
-    border-radius: 50px;
-    transition: background-color 0.3s ease;
 }
 
 .create-post-button:hover {
     background-color: #218838;
+    /* Donkere groene kleur bij hover */
+    border-color: #218838;
 }
