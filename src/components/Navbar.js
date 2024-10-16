@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
-import './Navbar.css';  // Voeg CSS voor verdere aanpassingen toe
+import './Navbar.css';
 
 function Navbar() {
+  const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -17,9 +18,16 @@ function Navbar() {
     }
   };
 
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
     <nav className="navbar-bottom">
-      <ul className="navbar-links">
+      <div className="hamburger" onClick={toggleMenu}>
+        &#9776; {/* Dit is het hamburger-icoon */}
+      </div>
+      <ul className={`navbar-links ${isOpen ? 'open' : ''}`}>
         <li>
           <Button
             variant="outline-primary"
