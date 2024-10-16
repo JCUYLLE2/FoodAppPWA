@@ -1,111 +1,48 @@
-/* Algemene stijlen voor de hele app */
-body,
-html {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
-}
-
-/* Zorg voor een responsieve container */
-.container {
-  margin-top: 90px;
-  padding: 20px;
-  width: 100%;
-  max-width: 1600px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* Algemene titels */
-h2 {
-  text-align: center;
-  font-size: 2.5rem;
-  margin-bottom: 20px;
-}
-
 /* Post-lijst stijlen */
 .post-list {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
 }
 
 /* Post-kaarten */
 .post-card {
   width: 100%;
-  max-width: 1000px;
+  max-width: none;
+  /* Verwijder de beperking van 1000px */
   margin-bottom: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  transition: transform 0.3s ease;
 }
 
+/* Post-kaart hover effect */
+.post-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Afbeelding in de post-kaart */
 .post-image {
   width: 100%;
-  max-width: 400px;
   height: auto;
   border-radius: 5px;
   margin-bottom: 15px;
+  object-fit: cover;
   display: block;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* Profiel- en gebruikersinformatie */
-.profile-pic {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-}
-
-/* Stijlen voor de HomePage */
-.home-page {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  background-color: #f4f4f4;
-}
-
-.home-logo {
-  width: 100%;
-  max-width: 500px;
-  height: auto;
-  margin-bottom: 20px;
-}
-
-/* Responsive topbar styling */
-.topbar-logo {
-  max-width: 150px;
-  height: auto;
-}
-
-.topbar-profile-pic {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-}
-
-/* Knoppen voor de startpagina */
-.start-button {
-  margin-top: 20px;
-  padding: 10px 20px;
-  background-color: #ff6347;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.3s ease;
-}
-
-.start-button:hover {
-  background-color: #ff4500;
 }
 
 /* Media query voor middelgrote schermen */
 @media (max-width: 1200px) {
   .container {
     max-width: 1000px;
+  }
+
+  .post-list {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    /* Kleinere kolommen voor kleinere schermen */
   }
 
   .home-logo {
@@ -128,8 +65,9 @@ h2 {
     font-size: 1.5rem;
   }
 
-  .post-card {
-    max-width: 90%;
+  .post-list {
+    grid-template-columns: 1fr;
+    /* Eén kolom voor tablets */
   }
 
   .profile-pic {
@@ -165,8 +103,9 @@ h2 {
     font-size: 1.2rem;
   }
 
-  .post-card {
-    max-width: 100%;
+  .post-list {
+    grid-template-columns: 1fr;
+    /* Eén kolom voor mobiele apparaten */
   }
 
   .profile-pic {
