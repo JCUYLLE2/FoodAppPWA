@@ -12,6 +12,7 @@ function ProfilePage() {
   const [leeftijd, setLeeftijd] = useState('');
   const [profilePic, setProfilePic] = useState('');
   const [profilePicFile, setProfilePicFile] = useState(null);
+  const [profilePicPreview, setProfilePicPreview] = useState(''); // Voorbeeld voor de gekozen afbeelding
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const storage = getStorage();
@@ -76,8 +77,23 @@ function ProfilePage() {
 
       setSuccess('Profile updated successfully!');
       setProfilePic(profilePicURL);
+      setProfilePicPreview(''); // Wis de preview na succesvol updaten
     } catch (error) {
       setError('Failed to update profile. Please try again.');
+    }
+  };
+
+  const handleProfilePicChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setProfilePicFile(file); // Sla het geselecteerde bestand op
+
+      // Gebruik FileReader om een voorbeeld van de afbeelding te genereren
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfilePicPreview(reader.result); // Sla de preview-URL op
+      };
+      reader.readAsDataURL(file); // Lees het bestand als Data URL
     }
   };
 
@@ -125,11 +141,17 @@ function ProfilePage() {
           <Form.Group controlId="formProfilePic" className="mt-3">
             <Form.Label>Profielfoto</Form.Label>
             <div>
-              {profilePic ? (
+              {profilePicPreview ? (
+                <img
+                  src={profilePicPreview}
+                  alt="Profile Preview"
+                  style={{ width: '150px', height: '150px', borderRadius: '50%', objectFit: 'cover' }}
+                />
+              ) : profilePic ? (
                 <img
                   src={profilePic}
                   alt="Profile"
-                  className="profile-pic"
+                  style={{ width: '150px', height: '150px', borderRadius: '50%', objectFit: 'cover' }}
                 />
               ) : (
                 <FaUserCircle size={150} />
@@ -138,7 +160,7 @@ function ProfilePage() {
             <Form.Control
               type="file"
               accept="image/*"
-              onChange={(e) => setProfilePicFile(e.target.files[0])}
+              onChange={handleProfilePicChange}
             />
           </Form.Group>
 

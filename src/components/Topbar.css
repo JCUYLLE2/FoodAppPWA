@@ -13,6 +13,11 @@
     height: 70px;
 }
 
+body {
+    padding-top: 70px;
+    /* Voeg standaard ruimte toe voor de topbar op alle pagina's */
+}
+
 .logo-img {
     height: 10vw;
     /* Responsieve hoogte, past zich aan de viewport breedte aan */
@@ -41,6 +46,11 @@
     width: auto;
     object-fit: cover;
     border-radius: 50%;
+}
+
+.feed-container {
+    padding: 20px;
+    /* Extra padding voor de inhoud van de feedpagina */
 }
 
 /* Media query voor kleinere schermen zoals mobiele telefoons */

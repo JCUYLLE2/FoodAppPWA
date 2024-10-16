@@ -14,6 +14,7 @@ function RegisterPage() {
   const [woonplaats, setWoonplaats] = useState('');
   const [leeftijd, setLeeftijd] = useState('');
   const [profilePic, setProfilePic] = useState(null); // Bestand voor profielfoto
+  const [profilePicPreview, setProfilePicPreview] = useState(null); // State voor preview
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const navigate = useNavigate();
@@ -52,6 +53,20 @@ function RegisterPage() {
       navigate('/feed');  // Na het registreren doorsturen naar de FeedPage
     } catch (error) {
       setError('Failed to register. Please try again.');
+    }
+  };
+
+  const handleProfilePicChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setProfilePic(file); // Sla de gekozen afbeelding op
+
+      // Gebruik FileReader om een voorbeeld van de afbeelding te genereren
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfilePicPreview(reader.result); // Sla de preview-URL op in de state
+      };
+      reader.readAsDataURL(file); // Lees het bestand als Data URL
     }
   };
 
@@ -95,16 +110,29 @@ function RegisterPage() {
         </Form.Group>
 
         <Form.Group controlId="formProfilePic" className="mt-3">
-          <Form.Label>Profielfoto</Form.Label>
-          <div>
-            {!profilePic && <FaUserCircle size={100} />} {/* Gebruik het standaard icoon */}
-            <Form.Control
-              type="file"
-              accept="image/*"
-              onChange={(e) => setProfilePic(e.target.files[0])}
-            />
-          </div>
-        </Form.Group>
+  <Form.Label>Profielfoto</Form.Label>
+  <div>
+    {!profilePicPreview && <FaUserCircle size={100} />} {/* Gebruik het standaard icoon */}
+    {profilePicPreview && (
+      <img
+        src={profilePicPreview}
+        alt="Profile Preview"
+        style={{
+          width: '100px',
+          height: '100px',
+          borderRadius: '50%',
+          objectFit: 'cover', // Zorgt ervoor dat de afbeelding niet vervormt
+        }}
+      />
+    )}
+    <Form.Control
+      type="file"
+      accept="image/*"
+      onChange={handleProfilePicChange}
+    />
+  </div>
+</Form.Group>
+
 
         <Form.Group controlId="formEmail" className="mt-3">
           <Form.Label>Email address</Form.Label>
