@@ -10,7 +10,7 @@ import logo from '../assets/logo.png'; // Importeer het logo
 function TopBar() {
   const [userName, setUserName] = useState('');
   const [profilePic, setProfilePic] = useState('');
-  const [user, loading, error] = useAuthState(auth); // Gebruik de useAuthState hook
+  const [user, loading] = useAuthState(auth); // Verwijder de ongebruikte 'error'
   const navigate = useNavigate();
 
   useEffect(() => {

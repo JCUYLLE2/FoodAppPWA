@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { db, auth } from '../firebaseConfig';
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, doc, getDoc } from 'firebase/firestore'; // Voeg getDoc toe
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useNavigate } from 'react-router-dom';
 import { Form, Button, Container, Alert } from 'react-bootstrap';
@@ -36,13 +36,23 @@ function PostPage() {
         photoURL = await getDownloadURL(snapshot.ref); // Verkrijg de URL van de geüploade afbeelding
       }
 
+      // Haal de gebruikersnaam op uit de 'users' collectie
+      const userDoc = await getDoc(doc(db, 'users', user.uid));
+      let userName = user.email; // Fallback naar het e-mailadres als er geen gebruikersnaam is
+
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        userName = userData.gebruikersnaam || user.email; // Gebruik de opgeslagen gebruikersnaam
+      }
+
       // Voeg een nieuwe post toe aan Firestore
       await addDoc(collection(db, 'posts'), {
         dishName,
         description,
         recipeLink, // Sla de receptlink op
         photoURL, // Sla de URL van de afbeelding op
-        userEmail: user.email,  // Sla het e-mailadres van de gebruiker op
+        userName, // Sla de gebruikersnaam op
+        userEmail: user.email, // Optioneel: sla het e-mailadres van de gebruiker op
         createdAt: new Date(),
       });
       setSuccess('Post created successfully!');

@@ -54,7 +54,7 @@ function FeedPage() {
                   <Card.Title className="post-title">{post.dishName}</Card.Title>
                   <Card.Text>{post.description}</Card.Text>
                   <Card.Footer>
-                    Posted by: {post.userName || post.userEmail}
+                    Posted by: {post.userName}
                   </Card.Footer>
                 </Card.Body>
               </Card>
