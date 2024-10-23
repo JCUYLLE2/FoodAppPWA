@@ -10,36 +10,30 @@ import logo from '../assets/logo.png'; // Importeer het logo
 function TopBar() {
   const [userName, setUserName] = useState('');
   const [profilePic, setProfilePic] = useState('');
-  const [user, loading, error] = useAuthState(auth); // Gebruik 'error' voor foutafhandeling
+  const [user, loading] = useAuthState(auth); // Verwijder de ongebruikte 'error'
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserData = async () => {
-      if (user && !loading) { // Zorg ervoor dat de 'user' en 'loading' zijn afgehandeld
+      if (user) {
         try {
           const userDoc = await getDoc(doc(db, 'users', user.uid));
           if (userDoc.exists()) {
             const data = userDoc.data();
-            setUserName(data.gebruikersnaam || user.email); // Gebruik gebruikersnaam of e-mail
-            setProfilePic(data.profilePic || ''); // Gebruik profielfoto als deze bestaat
-          } else {
-            console.error('No user data found in Firestore.');
+            setUserName(data.gebruikersnaam || user.email);
+            setProfilePic(data.profilePic || '');
           }
         } catch (error) {
-          console.error('Error fetching user data from Firestore:', error);
+          console.error('Error fetching user data:', error);
         }
       }
     };
 
     fetchUserData();
-  }, [user, loading]);
+  }, [user]);
 
   if (loading) {
     return null; // Je kunt hier een spinner of laadscherm tonen als je wilt
-  }
-
-  if (error) {
-    return <p>Error: {error.message}</p>; // Toon een foutmelding als er iets misgaat
   }
 
   return (
