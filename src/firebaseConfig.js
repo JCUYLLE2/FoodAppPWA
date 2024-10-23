@@ -42,20 +42,18 @@ try {
 export { db };
 
 // Initialize Firebase Storage
-export const storage = getStorage(app);
+const storage = getStorage();
 
-// Voorbeeld: het ophalen van een afbeelding van Firebase Storage
-const getImageUrl = (imagePath) => {
+export const getImageUrl = (imagePath) => {
   const imageRef = ref(storage, imagePath);
-  
   return getDownloadURL(imageRef)
     .then((url) => {
       console.log("Image URL retrieved: ", url);
-      // Hier kun je deze URL in je app gebruiken of cachen met je service worker
       return url;
     })
     .catch((error) => {
       console.error("Error fetching image URL: ", error);
+      return null;
     });
 };
 
