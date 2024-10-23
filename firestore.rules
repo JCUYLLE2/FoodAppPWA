@@ -1,0 +1,14 @@
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Regels voor de users-collectie
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Regels voor de posts-collectie
+    match /posts/{postId} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}
+

@@ -1,70 +1,41 @@
-import React, { useState, useEffect } from 'react';
-import { db } from '../firebaseConfig';
+import React, { useEffect, useState } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
-import { Container, Card } from 'react-bootstrap';
-import Navbar from '../components/Navbar'; // Voeg de Navbar import toe
-import '../App.css';  // Voeg een CSS-bestand toe voor de responsieve stijlen
+import { db } from './firebase'; // Verwijs naar je Firestore-initialisatie
+import DishImage from './DishImage'; // Importeer het DishImage-component
 
 function FeedPage() {
-  const [posts, setPosts] = useState([]);
-  const [error, setError] = useState('');
+  const [dishes, setDishes] = useState([]);
 
   useEffect(() => {
-    const fetchPosts = async () => {
+    const fetchDishes = async () => {
       try {
-        // Controleer of de db correct is geïnitialiseerd
-        if (!db) {
-          setError('Database not initialized');
-          return;
-        }
-
-        console.log('Fetching posts...'); // Log toegevoegd
-        const querySnapshot = await getDocs(collection(db, 'posts'));
-        const postsData = querySnapshot.docs.map(doc => doc.data());
-        console.log('Fetched posts:', postsData); // Log toegevoegd
-        setPosts(postsData);
-      } catch (err) {
-        console.error('Error fetching posts:', err); // Log toegevoegd
-        setError('Failed to fetch posts. Please check your permissions.');
+        const querySnapshot = await getDocs(collection(db, 'dishes')); // Haal gerechten op uit Firestore
+        const dishesArray = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setDishes(dishesArray);
+      } catch (error) {
+        console.error('Error fetching dishes from Firestore:', error);
       }
     };
 
-    fetchPosts();
+    fetchDishes();
   }, []);
 
   return (
-    <>
-      <Navbar />  {/* Voeg de Navbar toe */}
-      <Container className="mt-5 feed-container">
-        <h2 className="feed-title">Feed</h2>
-        {error && <p>{error}</p>}
-        <div className="post-list">
-          {posts.length > 0 ? (
-            posts.map((post, index) => (
-              <Card key={index} className="mb-3 post-card">
-                <Card.Body>
-                  {/* Weergeven van de afbeelding, als deze beschikbaar is */}
-                  {post.photoURL && (
-                    <img
-                      src={post.photoURL}
-                      alt={post.dishName}
-                      className="post-image"
-                    />
-                  )}
-                  <Card.Title className="post-title">{post.dishName}</Card.Title>
-                  <Card.Text>{post.description}</Card.Text>
-                  <Card.Footer>
-                    Posted by: {post.userName}
-                  </Card.Footer>
-                </Card.Body>
-              </Card>
-            ))
-          ) : (
-            <p>No posts available yet.</p>
-          )}
-        </div>
-      </Container>
-    </>
+    <div>
+      {dishes.length === 0 ? (
+        <p>Loading dishes...</p> // Toon een boodschap als er geen gerechten zijn opgehaald
+      ) : (
+        dishes.map((dish) => (
+          <div key={dish.id}>
+            <h3>{dish.name}</h3>
+            <DishImage imagePath={dish.imagePath} /> {/* Laad dynamisch de afbeelding */}
+          </div>
+        ))
+      )}
+    </div>
   );
 }
 

@@ -2,7 +2,8 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
-import { initializeFirestore, persistentLocalCache } from "firebase/firestore";
+import { initializeFirestore, persistentLocalCache, memoryLocalCache } from "firebase/firestore";
+import { getStorage, ref, getDownloadURL } from "firebase/storage"; // Import voor Firebase Storage
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -23,8 +24,40 @@ export const analytics = getAnalytics(app);
 export const auth = getAuth(app);
 
 // Initialize Firestore with persistent cache
-export const db = initializeFirestore(app, {
-  cache: persistentLocalCache()
-});
+let db;
 
-console.log("Firestore with persistent cache is initialized.");
+try {
+  db = initializeFirestore(app, {
+    cache: persistentLocalCache()
+  });
+  console.log("Firestore initialized with persistent cache.");
+} catch (err) {
+  // Fallback in case persistentLocalCache() is not supported
+  console.error("Persistent cache not supported, falling back to memory cache:", err);
+  db = initializeFirestore(app, {
+    cache: memoryLocalCache() // Falls back to memory-based caching
+  });
+}
+
+export { db };
+
+// Initialize Firebase Storage
+export const storage = getStorage(app);
+
+// Voorbeeld: het ophalen van een afbeelding van Firebase Storage
+const getImageUrl = (imagePath) => {
+  const imageRef = ref(storage, imagePath);
+  
+  return getDownloadURL(imageRef)
+    .then((url) => {
+      console.log("Image URL retrieved: ", url);
+      // Hier kun je deze URL in je app gebruiken of cachen met je service worker
+      return url;
+    })
+    .catch((error) => {
+      console.error("Error fetching image URL: ", error);
+    });
+};
+
+// Voorbeeld van het gebruik van de functie:
+getImageUrl('images/myImage.jpg');
