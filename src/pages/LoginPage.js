@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { auth } from '../firebaseConfig';
 import { useNavigate } from 'react-router-dom';
 import { Form, Button, Container, Alert } from 'react-bootstrap';
@@ -7,38 +7,22 @@ import { Form, Button, Container, Alert } from 'react-bootstrap';
 function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [signInWithEmailAndPassword, user, loading, error] = useSignInWithEmailAndPassword(auth);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError('');
-
-    try {
-      // Probeer in te loggen met Firebase Authentication
-      await signInWithEmailAndPassword(auth, email, password);
-      navigate('/feed');  // Navigeer naar de FeedPage na succesvol inloggen
-    } catch (error) {
-      switch (error.code) {
-        case 'auth/wrong-password':
-          setError('Incorrect password. Please try again.');
-          break;
-        case 'auth/user-not-found':
-          setError('No user found with this email.');
-          break;
-        case 'auth/invalid-email':
-          setError('Invalid email format.');
-          break;
-        default:
-          setError('Failed to log in. Please check your credentials.');
-      }
-    }
+    await signInWithEmailAndPassword(email, password);
   };
+
+  if (user) {
+    navigate('/feed');  // Navigeer naar de FeedPage na succesvol inloggen
+  }
 
   return (
     <Container className="mt-5 login-container">
       <h2 className="text-center">Login</h2>
-      {error && <Alert variant="danger">{error}</Alert>}
+      {error && <Alert variant="danger">{error.message}</Alert>}
       <Form onSubmit={handleLogin} className="login-form">
         <Form.Group controlId="formBasicEmail">
           <Form.Label>Emailadres</Form.Label>
@@ -62,9 +46,15 @@ function LoginPage() {
           />
         </Form.Group>
 
-        <Button variant="primary" type="submit" className="mt-4 w-100">
-          Log in
-        </Button>
+        {loading ? (
+          <Button variant="primary" disabled className="mt-4 w-100">
+            Loading...
+          </Button>
+        ) : (
+          <Button variant="primary" type="submit" className="mt-4 w-100">
+            Log in
+          </Button>
+        )}
       </Form>
     </Container>
   );
