@@ -10,7 +10,6 @@
 .post-card {
   width: 100%;
   max-width: none;
-  /* Verwijder de beperking van 1000px */
   margin-bottom: 20px;
   background-color: #fff;
   border-radius: 8px;
@@ -30,8 +29,26 @@
   height: auto;
   border-radius: 5px;
   margin-bottom: 15px;
+  margin-top: 15px;
+  /* Extra ruimte boven de afbeelding */
   object-fit: cover;
   display: block;
+}
+
+/* Algemene stijlen voor home-logo */
+.home-logo {
+  max-width: 300px;
+  width: 100%;
+  height: auto;
+  margin-top: 20px;
+  /* Extra ruimte boven het logo */
+}
+
+/* Media query voor grote schermen */
+@media (min-width: 1201px) {
+  .home-logo {
+    max-width: 400px;
+  }
 }
 
 /* Media query voor middelgrote schermen */
@@ -42,11 +59,10 @@
 
   .post-list {
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    /* Kleinere kolommen voor kleinere schermen */
   }
 
   .home-logo {
-    max-width: 350px;
+    max-width: 300px;
   }
 
   .topbar-logo {
@@ -67,7 +83,6 @@
 
   .post-list {
     grid-template-columns: 1fr;
-    /* Eén kolom voor tablets */
   }
 
   .profile-pic {
@@ -105,7 +120,6 @@
 
   .post-list {
     grid-template-columns: 1fr;
-    /* Eén kolom voor mobiele apparaten */
   }
 
   .profile-pic {

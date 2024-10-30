@@ -1,44 +1,33 @@
-import React, { useState } from 'react';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebaseConfig';
+import React, { useState, useEffect } from 'react';
+import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import { auth } from '../firebaseConfig'; // Verwijs naar je Firebase configuratie
 import { useNavigate } from 'react-router-dom';
 import { Form, Button, Container, Alert } from 'react-bootstrap';
 
 function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setError('');
+  // Gebruik de useSignInWithEmailAndPassword hook uit react-firebase-hooks
+  const [signInWithEmailAndPassword, user, loading, error] = useSignInWithEmailAndPassword(auth);
 
-    try {
-      // Probeer in te loggen met Firebase Authentication
-      await signInWithEmailAndPassword(auth, email, password);
-      navigate('/feed');  // Navigeer naar de FeedPage na succesvol inloggen
-    } catch (error) {
-      switch (error.code) {
-        case 'auth/wrong-password':
-          setError('Incorrect password. Please try again.');
-          break;
-        case 'auth/user-not-found':
-          setError('No user found with this email.');
-          break;
-        case 'auth/invalid-email':
-          setError('Invalid email format.');
-          break;
-        default:
-          setError('Failed to log in. Please check your credentials.');
-      }
-    }
+  const handleLogin = (e) => {
+    e.preventDefault();
+    signInWithEmailAndPassword(email, password); // Probeer in te loggen met Firebase
   };
+
+  // Gebruik useEffect voor navigatie om mogelijke render-loops te vermijden
+  useEffect(() => {
+    if (user) {
+      navigate('/feed');
+    }
+  }, [user, navigate]);
 
   return (
     <Container className="mt-5 login-container">
       <h2 className="text-center">Login</h2>
-      {error && <Alert variant="danger">{error}</Alert>}
+      {error && <Alert variant="danger">{error.message}</Alert>} {/* Toon foutmeldingen */}
       <Form onSubmit={handleLogin} className="login-form">
         <Form.Group controlId="formBasicEmail">
           <Form.Label>Emailadres</Form.Label>
@@ -62,9 +51,15 @@ function LoginPage() {
           />
         </Form.Group>
 
-        <Button variant="primary" type="submit" className="mt-4 w-100">
-          Log in
-        </Button>
+        {loading ? (
+          <Button variant="primary" disabled className="mt-4 w-100">
+            Loading...
+          </Button>
+        ) : (
+          <Button variant="primary" type="submit" className="mt-4 w-100">
+            Log in
+          </Button>
+        )}
       </Form>
     </Container>
   );
