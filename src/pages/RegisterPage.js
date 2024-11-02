@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../firebaseConfig';
 import { setDoc, doc } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useNavigate } from 'react-router-dom';
 import { Form, Button, Container, Alert } from 'react-bootstrap';
-import { FaUserCircle } from 'react-icons/fa'; // Voeg een Font Awesome icon toe
+import { FaUserCircle } from 'react-icons/fa';
 
 function RegisterPage() {
   const [email, setEmail] = useState('');
@@ -13,11 +13,23 @@ function RegisterPage() {
   const [gebruikersnaam, setGebruikersnaam] = useState('');
   const [woonplaats, setWoonplaats] = useState('');
   const [leeftijd, setLeeftijd] = useState('');
-  const [profilePic, setProfilePic] = useState(null); // Bestand voor profielfoto
+  const [profilePic, setProfilePic] = useState(null);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const navigate = useNavigate();
   const storage = getStorage();
+
+  useEffect(() => {
+    // Clear all form fields on component mount
+    setEmail('');
+    setPassword('');
+    setGebruikersnaam('');
+    setWoonplaats('');
+    setLeeftijd('');
+    setProfilePic(null);
+    setError('');
+    setSuccess('');
+  }, []);
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -25,31 +37,28 @@ function RegisterPage() {
     setSuccess('');
 
     try {
-      // Maak een nieuwe gebruiker aan met Firebase Authentication
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
       let profilePicURL = '';
 
-      // Upload profielfoto naar Firebase Storage als deze bestaat
       if (profilePic) {
         const storageRef = ref(storage, `profilePics/${user.uid}`);
         await uploadBytes(storageRef, profilePic);
         profilePicURL = await getDownloadURL(storageRef);
       } else {
-        profilePicURL = ''; // Leeg laten als er geen profielfoto is
+        profilePicURL = '';
       }
 
-      // Sla extra gebruikersinformatie op in Firestore
       await setDoc(doc(db, 'users', user.uid), {
         gebruikersnaam: gebruikersnaam,
         woonplaats: woonplaats,
         leeftijd: leeftijd,
-        profilePic: profilePicURL, // Gebruik de geüploade profielfoto of leeg
+        profilePic: profilePicURL,
         createdAt: new Date(),
       });
 
       setSuccess('User registered successfully!');
-      navigate('/feed');  // Na het registreren doorsturen naar de FeedPage
+      navigate('/feed');
     } catch (error) {
       setError('Failed to register. Please try again.');
     }
@@ -97,7 +106,7 @@ function RegisterPage() {
         <Form.Group controlId="formProfilePic" className="mt-3">
           <Form.Label>Profielfoto</Form.Label>
           <div>
-            {!profilePic && <FaUserCircle size={100} />} {/* Gebruik het standaard icoon */}
+            {!profilePic && <FaUserCircle size={100} />}
             <Form.Control
               type="file"
               accept="image/*"
@@ -128,7 +137,7 @@ function RegisterPage() {
           />
         </Form.Group>
 
-        <Button variant="primary" type="submit" className="mt-4" style={{marginBottom:"5em"}}>
+        <Button variant="primary" type="submit" className="mt-4" style={{ marginBottom: "5em" }}>
           Register
         </Button>
       </Form>
