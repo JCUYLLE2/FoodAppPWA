@@ -128,7 +128,7 @@ function RegisterPage() {
           />
         </Form.Group>
 
-        <Button variant="primary" type="submit" className="mt-4">
+        <Button variant="primary" type="submit" className="mt-4" style={{marginBottom:"5em"}}>
           Register
         </Button>
       </Form>
