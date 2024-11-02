@@ -142,7 +142,7 @@ function ProfilePage() {
             />
           </Form.Group>
 
-          <Button variant="primary" type="submit" className="mt-4">
+          <Button variant="primary" type="submit" className="mt-4" style={{marginBottom:"3em"}}>
             Update Profile
           </Button>
         </Form>
