@@ -3,8 +3,8 @@ import { auth, db } from '../firebaseConfig';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { Container, Form, Button, Alert } from 'react-bootstrap';
-import { FaUserCircle } from 'react-icons/fa'; // Gebruikt een Font Awesome icon voor de standaard profielfoto
-import Navbar from '../components/Navbar'; // Importeer je Navbar component
+import { FaUserCircle } from 'react-icons/fa'; // Default profile icon
+import Navbar from '../components/Navbar'; // Import your Navbar component
 
 function ProfilePage() {
   const [gebruikersnaam, setGebruikersnaam] = useState('');
@@ -43,6 +43,23 @@ function ProfilePage() {
     fetchUserData();
   }, []);
 
+  const handleProfilePicChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const validTypes = ["image/jpeg", "image/png", "image/gif"];
+      if (!validTypes.includes(file.type)) {
+        setError("Invalid file type. Only JPG, PNG, and GIF are allowed.");
+        return;
+      }
+      if (file.size > 2 * 1024 * 1024) { // Limit to 2 MB
+        setError("File size should be less than 2 MB.");
+        return;
+      }
+      setProfilePicFile(file);
+      setError(""); // Clear any previous errors
+    }
+  };
+
   const handleUpdate = async (e) => {
     e.preventDefault();
     setError('');
@@ -58,14 +75,14 @@ function ProfilePage() {
 
       let profilePicURL = profilePic;
 
-      // Upload de nieuwe profielfoto naar Firebase Storage indien een nieuwe is gekozen
+      // Upload new profile picture to Firebase Storage if a new file is selected
       if (profilePicFile) {
         const storageRef = ref(storage, `profilePics/${user.uid}`);
         await uploadBytes(storageRef, profilePicFile);
         profilePicURL = await getDownloadURL(storageRef);
       }
 
-      // Update de gebruikersinformatie in Firestore
+      // Update user information in Firestore
       await setDoc(doc(db, 'users', user.uid), {
         gebruikersnaam: gebruikersnaam,
         woonplaats: woonplaats,
@@ -83,7 +100,7 @@ function ProfilePage() {
 
   return (
     <>
-      <Navbar /> {/* Voeg de Navbar toe aan de pagina */}
+      <Navbar /> {/* Add Navbar to the page */}
       <Container className="mt-5 profile-container">
         <h2>Profile</h2>
         {error && <Alert variant="danger">{error}</Alert>}
@@ -126,23 +143,19 @@ function ProfilePage() {
             <Form.Label>Profielfoto</Form.Label>
             <div>
               {profilePic ? (
-                <img
-                  src={profilePic}
-                  alt="Profile"
-                  className="profile-pic"
-                />
+                <img src={profilePic} alt="Profile" style={{ width: 100, height: 100, borderRadius: '50%' }} />
               ) : (
-                <FaUserCircle size={150} />
+                <FaUserCircle size={100} />
               )}
+              <Form.Control
+                type="file"
+                accept=".jpg, .jpeg, .png, .gif"
+                onChange={handleProfilePicChange}
+              />
             </div>
-            <Form.Control
-              type="file"
-              accept="image/*"
-              onChange={(e) => setProfilePicFile(e.target.files[0])}
-            />
           </Form.Group>
 
-          <Button variant="primary" type="submit" className="mt-4" style={{marginBottom:"3em"}}>
+          <Button variant="primary" type="submit" className="mt-4" style={{ marginBottom: "3em" }}>
             Update Profile
           </Button>
         </Form>
