@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Image } from 'react-bootstrap';
-import { useAuthState } from 'react-firebase-hooks/auth'; // Gebruik de react-firebase-hooks
+import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth, db } from '../firebaseConfig';
 import { doc, getDoc } from 'firebase/firestore';
-import './Topbar.css'; // Zorg voor de juiste CSS
-import logo from '../assets/logo.png'; // Importeer het logo
+import { FaUserCircle } from 'react-icons/fa';
+import './Topbar.css';
+import logo from '../assets/logo.png';
 
 function TopBar() {
   const [userName, setUserName] = useState('');
   const [profilePic, setProfilePic] = useState('');
-  const [user, loading] = useAuthState(auth); // Verwijder de ongebruikte 'error'
+  const [user, loading] = useAuthState(auth);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -32,21 +32,34 @@ function TopBar() {
     fetchUserData();
   }, [user]);
 
+  const handleLogoClick = () => {
+    if (user) {
+      navigate('/feed'); // Als ingelogd, ga naar de feed
+    } else {
+      navigate('/'); // Anders, ga naar de homepage
+    }
+  };
+
   if (loading) {
-    return null; // Je kunt hier een spinner of laadscherm tonen als je wilt
+    return null; // Laadindicator indien nodig
   }
 
   return (
     <div className="top-bar">
-      <div className="logo" onClick={() => navigate('/')}>
+      <div className="logo" onClick={handleLogoClick}>
         <img src={logo} alt="App Logo" className="logo-img" />
       </div>
-      {user && ( // Toon gebruikersinformatie alleen als de gebruiker is ingelogd
+      {user && (
         <div className="user-info">
           {profilePic ? (
-            <Image src={profilePic} roundedCircle className="profile-pic" />
+            <img 
+              src={profilePic} 
+              alt="Profile" 
+              className="profile-pic" 
+              style={{ width: 50, height: 50, borderRadius: '50%' }}
+            />
           ) : (
-            <Image src="/path/to/default-profile.png" roundedCircle className="profile-pic" />
+            <FaUserCircle size={50} className="profile-icon" />
           )}
           <span className="user-name">{userName}</span>
         </div>

@@ -3,15 +3,15 @@ import { auth, db } from '../firebaseConfig';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { Container, Form, Button, Alert } from 'react-bootstrap';
-import { FaUserCircle } from 'react-icons/fa'; // Default profile icon
-import Navbar from '../components/Navbar'; // Import your Navbar component
+import { FaUserCircle } from 'react-icons/fa'; // Gebruikt een Font Awesome icon voor de standaard profielfoto
+import Navbar from '../components/Navbar'; // Importeer je Navbar component
 
 function ProfilePage() {
   const [gebruikersnaam, setGebruikersnaam] = useState('');
   const [woonplaats, setWoonplaats] = useState('');
   const [leeftijd, setLeeftijd] = useState('');
-  const [profilePic, setProfilePic] = useState('');
-  const [profilePicFile, setProfilePicFile] = useState(null);
+  const [profilePic, setProfilePic] = useState(''); // URL voor de huidige profielfoto
+  const [profilePicFile, setProfilePicFile] = useState(null); // Bestand voor de nieuwe profielfoto
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const storage = getStorage();
@@ -43,20 +43,12 @@ function ProfilePage() {
     fetchUserData();
   }, []);
 
+  // Functie om geselecteerde afbeelding te verwerken
   const handleProfilePicChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const validTypes = ["image/jpeg", "image/png", "image/gif"];
-      if (!validTypes.includes(file.type)) {
-        setError("Invalid file type. Only JPG, PNG, and GIF are allowed.");
-        return;
-      }
-      if (file.size > 2 * 1024 * 1024) { // Limit to 2 MB
-        setError("File size should be less than 2 MB.");
-        return;
-      }
-      setProfilePicFile(file);
-      setError(""); // Clear any previous errors
+      setProfilePicFile(file); // Bewaar het bestand voor upload
+      setProfilePic(URL.createObjectURL(file)); // Toon de afbeelding direct
     }
   };
 
@@ -75,14 +67,14 @@ function ProfilePage() {
 
       let profilePicURL = profilePic;
 
-      // Upload new profile picture to Firebase Storage if a new file is selected
+      // Upload de nieuwe profielfoto naar Firebase Storage indien een nieuwe is gekozen
       if (profilePicFile) {
         const storageRef = ref(storage, `profilePics/${user.uid}`);
         await uploadBytes(storageRef, profilePicFile);
         profilePicURL = await getDownloadURL(storageRef);
       }
 
-      // Update user information in Firestore
+      // Update de gebruikersinformatie in Firestore
       await setDoc(doc(db, 'users', user.uid), {
         gebruikersnaam: gebruikersnaam,
         woonplaats: woonplaats,
@@ -92,7 +84,8 @@ function ProfilePage() {
       });
 
       setSuccess('Profile updated successfully!');
-      setProfilePic(profilePicURL);
+      setProfilePic(profilePicURL); // Werk de profielfoto-URL bij
+      setProfilePicFile(null); // Reset het profielbestand na upload
     } catch (error) {
       setError('Failed to update profile. Please try again.');
     }
@@ -100,7 +93,7 @@ function ProfilePage() {
 
   return (
     <>
-      <Navbar /> {/* Add Navbar to the page */}
+      <Navbar /> {/* Voeg de Navbar toe aan de pagina */}
       <Container className="mt-5 profile-container">
         <h2>Profile</h2>
         {error && <Alert variant="danger">{error}</Alert>}
@@ -143,7 +136,7 @@ function ProfilePage() {
             <Form.Label>Profielfoto</Form.Label>
             <div>
               {profilePic ? (
-                <img src={profilePic} alt="Profile" style={{ width: 100, height: 100, borderRadius: '50%' }} />
+                <img src={profilePic} alt="Profile" style={{ width: 100, height: 100, borderRadius: '50%', marginBottom: "2em"  }} />
               ) : (
                 <FaUserCircle size={100} />
               )}
@@ -155,7 +148,7 @@ function ProfilePage() {
             </div>
           </Form.Group>
 
-          <Button variant="primary" type="submit" className="mt-4" style={{ marginBottom: "3em" }}>
+          <Button variant="primary" type="submit" className="mt-4" style={{ marginBottom: "5em" }}>
             Update Profile
           </Button>
         </Form>
