@@ -6,6 +6,7 @@
     padding: 10px;
     box-shadow: 0 -1px 10px rgba(0, 0, 0, 0.3);
     z-index: 1000;
+    margin-top: 35px;
 }
 
 .navbar-links {
