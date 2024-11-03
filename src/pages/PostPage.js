@@ -9,6 +9,7 @@ function PostPage() {
   const [dishName, setDishName] = useState('');
   const [description, setDescription] = useState('');
   const [recipeLink, setRecipeLink] = useState('');
+  const [isOwnRecipe, setIsOwnRecipe] = useState(false); // Nieuw veld voor eigen recept
   const [photo, setPhoto] = useState(null);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -45,7 +46,8 @@ function PostPage() {
       await addDoc(collection(db, 'posts'), {
         dishName,
         description,
-        recipeLink,
+        recipeLink: isOwnRecipe ? '' : recipeLink, // Alleen opslaan als het geen eigen recept is
+        isOwnRecipe, // Opslaan of het een eigen recept is
         photoURL,
         userName,
         userEmail: user.email,
@@ -103,15 +105,26 @@ function PostPage() {
           />
         </Form.Group>
 
-        <Form.Group controlId="formRecipeLink" className="mt-3">
-          <Form.Label>Recipe Link</Form.Label>
-          <Form.Control
-            type="url"
-            placeholder="Enter the link to the recipe"
-            value={recipeLink}
-            onChange={(e) => setRecipeLink(e.target.value)}
+        <Form.Group controlId="formIsOwnRecipe" className="mt-3">
+          <Form.Check
+            type="checkbox"
+            label="This is my own recipe"
+            checked={isOwnRecipe}
+            onChange={(e) => setIsOwnRecipe(e.target.checked)}
           />
         </Form.Group>
+
+        {!isOwnRecipe && (
+          <Form.Group controlId="formRecipeLink" className="mt-3">
+            <Form.Label>Recipe Link</Form.Label>
+            <Form.Control
+              type="url"
+              placeholder="Enter the link to the recipe"
+              value={recipeLink}
+              onChange={(e) => setRecipeLink(e.target.value)}
+            />
+          </Form.Group>
+        )}
 
         <Button variant="primary" type="submit" className="mt-4">
           Create Post
