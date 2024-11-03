@@ -148,3 +148,20 @@
     height: 35px;
   }
 }
+/* Specifieke container voor eigen recept-checkbox */
+.recipe-option-container {
+  margin-top: 20px;
+  /* Extra ruimte boven de optie voor eigen recept */
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  /* Ruimte tussen checkbox en label */
+}
+
+/* Stijlen voor de submit-knop */
+.submit-button {
+  width: 100%;
+  max-width: 200px;
+  /* Instelbare breedte voor de knop */
+  margin-top: 20px;
+}

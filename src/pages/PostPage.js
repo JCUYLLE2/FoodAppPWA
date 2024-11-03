@@ -105,15 +105,17 @@ function PostPage() {
           />
         </Form.Group>
 
-        <Form.Group controlId="formIsOwnRecipe" className="mt-3">
-          <Form.Check
-            type="checkbox"
-            label="This is my own recipe"
-            checked={isOwnRecipe}
-            onChange={(e) => setIsOwnRecipe(e.target.checked)}
-          />
-        </Form.Group>
+        <Form.Group controlId="formIsOwnRecipe" className="recipe-option-container mt-3">
+  <Form.Check
+    type="checkbox"
+    label="This is my own recipe"
+    checked={isOwnRecipe}
+    onChange={(e) => setIsOwnRecipe(e.target.checked)}
+  />
+</Form.Group>
 
+
+        {/* Toon linkveld alleen als het geen eigen recept is */}
         {!isOwnRecipe && (
           <Form.Group controlId="formRecipeLink" className="mt-3">
             <Form.Label>Recipe Link</Form.Label>
@@ -122,13 +124,14 @@ function PostPage() {
               placeholder="Enter the link to the recipe"
               value={recipeLink}
               onChange={(e) => setRecipeLink(e.target.value)}
+              required={!isOwnRecipe} // Verplicht veld als het geen eigen recept is
             />
           </Form.Group>
         )}
 
-        <Button variant="primary" type="submit" className="mt-4">
-          Create Post
-        </Button>
+        <Button variant="primary" type="submit" className="mt-4 submit-button">
+  Create Post
+</Button>
       </Form>
     </Container>
   );
