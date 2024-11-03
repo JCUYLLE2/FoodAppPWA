@@ -1,18 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { db } from '../firebaseConfig';
-import { collection, getDocs, enableIndexedDbPersistence } from 'firebase/firestore';
+import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { Container, Card, Alert } from 'react-bootstrap';
+import { FaExternalLinkAlt } from 'react-icons/fa'; // Importeer een icoon voor de link
 import Navbar from '../components/Navbar';
 import '../App.css';
-
-// Offline persistence inschakelen voor Firestore
-enableIndexedDbPersistence(db).catch((err) => {
-  if (err.code === 'failed-precondition') {
-    console.error('Offline persistence failed: multiple tabs open');
-  } else if (err.code === 'unimplemented') {
-    console.error('Offline persistence is not supported in this browser');
-  }
-});
 
 function FeedPage() {
   const [posts, setPosts] = useState([]);
@@ -26,7 +18,8 @@ function FeedPage() {
           return;
         }
 
-        const querySnapshot = await getDocs(collection(db, 'posts'));
+        const q = query(collection(db, 'posts'), orderBy('createdAt', 'desc'));
+        const querySnapshot = await getDocs(q);
         const postsData = querySnapshot.docs.map((doc) => doc.data());
         setPosts(postsData);
       } catch (err) {
@@ -37,6 +30,10 @@ function FeedPage() {
 
     fetchPosts();
   }, []);
+
+  const openLink = (url) => {
+    window.open(url, '_blank');
+  };
 
   return (
     <>
@@ -62,6 +59,16 @@ function FeedPage() {
                   )}
                   <Card.Title className="post-title">{post.dishName}</Card.Title>
                   <Card.Text>{post.description}</Card.Text>
+                  {post.recipeLink && (
+                    <div
+                      className="post-link-icon"
+                      onClick={() => openLink(post.recipeLink)}
+                      style={{ cursor: 'pointer', color: '#007bff', marginTop: '10px' }}
+                    >
+                      <FaExternalLinkAlt /> {/* Icoon voor de link */}
+                      <span style={{ marginLeft: '5px' }}>Open Recipe</span>
+                    </div>
+                  )}
                   <Card.Footer>
                     Posted by: {post.userName || 'Anonymous'}
                   </Card.Footer>
