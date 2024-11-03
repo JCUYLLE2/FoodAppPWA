@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { db } from '../firebaseConfig';
 import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { Container, Card, Alert } from 'react-bootstrap';
-import { FaExternalLinkAlt } from 'react-icons/fa'; // Importeer een icoon voor de link
+import { FaExternalLinkAlt } from 'react-icons/fa';
 import Navbar from '../components/Navbar';
 import '../App.css';
 
@@ -18,9 +18,10 @@ function FeedPage() {
           return;
         }
 
+        // Query om de posts te sorteren op `createdAt` in aflopende volgorde
         const q = query(collection(db, 'posts'), orderBy('createdAt', 'desc'));
         const querySnapshot = await getDocs(q);
-        const postsData = querySnapshot.docs.map((doc) => doc.data());
+        const postsData = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
         setPosts(postsData);
       } catch (err) {
         console.error('Error fetching posts:', err);
@@ -43,8 +44,8 @@ function FeedPage() {
         {error && <Alert variant="danger">{error}</Alert>}
         <div className="post-list">
           {posts.length > 0 ? (
-            posts.map((post, index) => (
-              <Card key={index} className="mb-3 post-card">
+            posts.map((post) => (
+              <Card key={post.id} className="mb-3 post-card">
                 <Card.Body>
                   {post.photoURL ? (
                     <img
@@ -65,7 +66,7 @@ function FeedPage() {
                       onClick={() => openLink(post.recipeLink)}
                       style={{ cursor: 'pointer', color: '#007bff', marginTop: '10px' }}
                     >
-                      <FaExternalLinkAlt /> {/* Icoon voor de link */}
+                      <FaExternalLinkAlt />
                       <span style={{ marginLeft: '5px' }}>Open Recipe</span>
                     </div>
                   )}
