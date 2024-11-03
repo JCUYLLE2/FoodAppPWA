@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { db } from '../firebaseConfig';
 import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { Container, Card, Alert } from 'react-bootstrap';
-import { FaExternalLinkAlt } from 'react-icons/fa';
+import { FaExternalLinkAlt } from 'react-icons/fa'; // Icoon voor externe link
 import Navbar from '../components/Navbar';
 import '../App.css';
 
@@ -18,7 +18,6 @@ function FeedPage() {
           return;
         }
 
-        // Query om de posts te sorteren op `createdAt` in aflopende volgorde
         const q = query(collection(db, 'posts'), orderBy('createdAt', 'desc'));
         const querySnapshot = await getDocs(q);
         const postsData = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
@@ -61,14 +60,16 @@ function FeedPage() {
                   <Card.Title className="post-title">{post.dishName}</Card.Title>
                   <Card.Text>{post.description}</Card.Text>
                   {post.recipeLink && (
-                    <div
-                      className="post-link-icon"
+                    <FaExternalLinkAlt
                       onClick={() => openLink(post.recipeLink)}
-                      style={{ cursor: 'pointer', color: '#007bff', marginTop: '10px' }}
-                    >
-                      <FaExternalLinkAlt />
-                      <span style={{ marginLeft: '5px' }}>Open Recipe</span>
-                    </div>
+                      style={{
+                        cursor: 'pointer',
+                        color: '#007bff',
+                        fontSize: '1.5em',
+                        marginTop: '10px'
+                      }}
+                      title="Open Recipe"
+                    />
                   )}
                   <Card.Footer>
                     Posted by: {post.userName || 'Anonymous'}
