@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
-import { auth } from '../firebaseConfig'; // Verwijs naar je Firebase configuratie
+import { auth } from '../firebaseConfig';
 import { useNavigate } from 'react-router-dom';
 import { Form, Button, Container, Alert } from 'react-bootstrap';
 
@@ -9,25 +9,24 @@ function LoginPage() {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  // Gebruik de useSignInWithEmailAndPassword hook uit react-firebase-hooks
   const [signInWithEmailAndPassword, user, loading, error] = useSignInWithEmailAndPassword(auth);
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    signInWithEmailAndPassword(email, password); // Probeer in te loggen met Firebase
-  };
-
-  // Gebruik useEffect voor navigatie om mogelijke render-loops te vermijden
+  // Direct doorsturen naar feedpagina als gebruiker al ingelogd is
   useEffect(() => {
-    if (user) {
+    if (auth.currentUser || user) {
       navigate('/feed');
     }
   }, [user, navigate]);
 
+  const handleLogin = (e) => {
+    e.preventDefault();
+    signInWithEmailAndPassword(email, password);
+  };
+
   return (
     <Container className="mt-5 login-container">
       <h2 className="text-center">Login</h2>
-      {error && <Alert variant="danger">{error.message}</Alert>} {/* Toon foutmeldingen */}
+      {error && <Alert variant="danger">{error.message}</Alert>}
       <Form onSubmit={handleLogin} className="login-form">
         <Form.Group controlId="formBasicEmail">
           <Form.Label>Emailadres</Form.Label>
